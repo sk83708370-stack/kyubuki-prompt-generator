@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>KYUBUKI — Prompt Generator V2.3</title>
+<title>KYUBUKI — Prompt Generator V2.4</title>
 <style>
 :root{color-scheme:dark;--bg:#101113;--panel:#181a1d;--line:#343942;--muted:#a5aab3;--ink:#f2efe8;--red:#b74038;--blue:#8ec0d2;--soft:#121417;--chip:#272b31}
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 system-ui,'Malgun Gothic',sans-serif}
@@ -30,6 +30,32 @@ button{font:inherit;font-weight:700;cursor:pointer;border:1px solid var(--line);
 .checkline{display:flex;gap:8px;align-items:flex-start;padding-top:3px}.checkline input{margin-top:3px}.mini{font-size:11px;color:var(--muted)} details{margin-top:14px;border:1px solid var(--line);border-radius:9px;background:#15181b} summary{cursor:pointer;padding:12px 14px;font-weight:700} details .inner{padding:0 14px 14px}
 footer{margin-top:18px;color:var(--muted);font-size:12px}
 @media(max-width:860px){.layout{grid-template-columns:1fr}.preview-panel{position:static}} @media(max-width:460px){.grid{grid-template-columns:1fr}}
+
+/* V2.4 visual composition preview */
+.preview-ver{font:11px ui-monospace,monospace;color:var(--blue);margin-left:8px}
+.stage-holder{margin:14px 0;display:flex;justify-content:center;background:#0e1013;border-radius:12px;padding:10px;overflow:hidden}
+.stage{--accent:#80c3dc;--stage-bg:radial-gradient(ellipse at 66% 38%,#263842 0%,#111820 50%,#090e14 100%);width:100%;aspect-ratio:16/9;max-height:560px;position:relative;isolation:isolate;overflow:hidden;border:1px solid #454954;border-radius:8px;background:var(--stage-bg);color:white;box-shadow:inset 0 0 55px #0005}
+.stage.ratio-portrait{width:min(62%,330px);aspect-ratio:9/16;max-height:none}.stage-grid{position:absolute;inset:0;opacity:.16;background-image:linear-gradient(#abc3cc33 1px,transparent 1px),linear-gradient(90deg,#abc3cc33 1px,transparent 1px);background-size:32px 32px}
+.stage-noise{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 4px,#ffffff08 5px 6px);opacity:.19;pointer-events:none}
+.stage-kicker{position:absolute;left:6%;top:7%;z-index:4;font:clamp(8px,.85vw,12px) ui-monospace,monospace;letter-spacing:1px;opacity:.8}
+.stage-photo-area{position:absolute;width:46%;height:74%;right:7%;top:10%;display:flex;align-items:center;justify-content:center;z-index:2;filter:drop-shadow(13px 14px 16px #0009)}
+.stage-photo-area img{display:block;max-width:100%;max-height:100%;object-fit:contain;border-radius:5px}
+.stage-photo-area img[hidden]{display:none}.stage-orbit{position:absolute;right:9%;top:10%;width:43%;aspect-ratio:1;border-radius:50%;border:1px solid var(--accent);box-shadow:0 0 0 23px #ffffff05,0 0 0 56px #ffffff03;opacity:.6}
+.bottle{width:55%;height:90%;display:flex;flex-direction:column;align-items:center;justify-content:center}.bottle-cap{width:40%;height:13%;border-radius:7px 7px 2px 2px;background:linear-gradient(90deg,#111 0%,#555 35%,#242424 100%)}.bottle-body{height:78%;width:82%;background:linear-gradient(90deg,#202b30 0%,#738893 25%,#242e31 55%,#0c1015 100%);border-radius:13px 13px 19px 19px;border:1px solid #94acbc55;display:grid;place-items:center;box-shadow:inset -15px 0 14px #05080c66}
+.bottle-label{background:#cdd9db;color:#142126;width:88%;height:58%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:5px;padding:5px}.bottle-label span{font:7px ui-monospace,monospace;letter-spacing:1px}.bottle-label b{font-size:clamp(7px,1.3vw,13px)}.bottle-label small{font-size:6px;color:#344}
+.stage-copy{position:absolute;bottom:12%;left:6%;width:49%;z-index:4;text-shadow:1px 2px 12px #000c}.stage-eyebrow{font:clamp(8px,.85vw,11px) ui-monospace,monospace;letter-spacing:1px;color:var(--accent);margin-bottom:8px}.stage-title{font-size:clamp(17px,2.3vw,33px);line-height:1.23;font-weight:900;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.stage-sub{font-size:clamp(8px,1.05vw,13px);opacity:.85;margin-top:9px;max-width:90%}
+.stage-badge{position:absolute;right:5%;top:7%;z-index:3;border:1px solid var(--accent);color:var(--accent);font:9px ui-monospace,monospace;padding:4px 7px;transform:rotate(7deg)}
+.stage-foot{position:absolute;bottom:4%;left:6%;right:6%;border-top:1px solid #ffffff4a;padding-top:4px;font:9px ui-monospace,monospace;letter-spacing:1px;display:flex;justify-content:space-between;opacity:.7}
+.style-description{padding:12px;background:#10171d;border-radius:8px;margin-bottom:12px;border:1px solid #303d47}.style-description strong{color:var(--blue)}.style-description p{margin:4px 0 0;font-size:12px;color:var(--muted)}
+.style-science{--accent:#83e5f5;--stage-bg:linear-gradient(135deg,#071826,#0c3650 53%,#061520)}.style-science .stage-orbit{border-style:dashed}.style-science .stage-grid{opacity:.45}
+.style-collage{--accent:#f6a659;--stage-bg:repeating-linear-gradient(-8deg,#eadbc0 0px,#f3e6d0 5px,#e9d8b9 8px);color:#221c1a}.style-collage .stage-title,.style-collage .stage-copy{text-shadow:none;color:#342522}.style-collage .stage-sub,.style-collage .stage-kicker,.style-collage .stage-foot{color:#413226}.style-collage .stage-photo-area{transform:rotate(-7deg);background:#fffaf1;padding:7px;border:5px solid #fff6e7;box-shadow:6px 8px 0 #75462880}.style-collage .stage-orbit{border:12px solid #e690516b}.style-collage .stage-badge{background:#7b2d1f;color:#fff;border:0;transform:rotate(11deg)}
+.style-cinema{--accent:#d6b78d;--stage-bg:radial-gradient(ellipse at 70% 40%,#6b5847 0%,#201d20 35%,#050506 75%)}.style-cinema .stage-grid{opacity:0}.style-cinema .stage-title{font-family:Georgia,'Malgun Gothic',serif;font-weight:500;letter-spacing:.025em}.style-cinema .stage-orbit{border:0;box-shadow:0 0 120px 80px #e0bd7e22}
+.style-humor{--accent:#f6d029;--stage-bg:repeating-linear-gradient(135deg,#d51f36 0 25px,#f5cb25 25px 50px)}.style-humor .stage-title{color:#fff527;text-shadow:3px 3px #181818,-2px -2px #181818;transform:rotate(-3deg);font-weight:1000}.style-humor .stage-badge{background:#fff02b;color:#a71c2c;transform:rotate(-13deg);border:3px solid #161616;font-weight:900}.style-humor .stage-photo-area{transform:rotate(6deg);filter:drop-shadow(12px 12px 0 #04040499)}.style-humor .stage-orbit{border:10px dashed #ffffff99}
+.style-product{--accent:#5f7165;--stage-bg:linear-gradient(150deg,#ece9df 0%,#dbdfd8 55%,#b7c4c0 100%);color:#263334}.style-product .stage-grid{opacity:0}.style-product .stage-copy{text-shadow:none}.style-product .stage-title{color:#16282c;font-weight:800}.style-product .stage-sub,.style-product .stage-kicker,.style-product .stage-foot{color:#273b41}.style-product .stage-badge{color:#2f5350;border-color:#2f5350}.style-product .stage-orbit{border-color:#809e95;opacity:.35}
+.style-data{--accent:#80eecc;--stage-bg:linear-gradient(120deg,#0d1831,#111c33)}.style-data .stage-grid{opacity:.4}
+.stage.ratio-portrait .stage-photo-area{width:72%;height:52%;left:14%;top:18%;right:auto}.stage.ratio-portrait .stage-orbit{top:19%;left:9%;right:auto;width:82%}.stage.ratio-portrait .stage-copy{bottom:10%;left:8%;width:86%}.stage.ratio-portrait .stage-title{font-size:clamp(16px,2.8vw,28px)}.stage.ratio-portrait .stage-badge{right:6%}
+.prompt-bottom{margin-top:16px}.prompt-top{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}.prompt-top .actions{margin:0}.prompt-top h2{margin-bottom:3px}.prompt-bottom .preview{margin-top:12px;min-height:180px;max-height:570px}.prompt-bottom .preview[hidden]{display:none}
+@media(max-width:460px){.stage-title{font-size:19px}.stage-sub{font-size:10px}.stage.ratio-portrait{width:min(75%,290px)}}
 </style>
 </head>
 <body>
@@ -37,7 +63,7 @@ footer{margin-top:18px;color:var(--muted);font-size:12px}
 <header>
   <div>
     <div class="eyebrow">KYUBUKI / CREATIVE MOTION STUDIO</div>
-    <h1>만능 모션그래픽 생성기 V2.3</h1>
+    <h1>만능 모션그래픽 생성기 V2.4</h1>
     <small>제품 설명 프리셋 + 참고사진 업로드 지원 · CODEX PROMPT CONSOLE</small>
   </div>
   <div class="seal">규북이</div>
@@ -180,21 +206,71 @@ footer{margin-top:18px;color:var(--muted);font-size:12px}
 </section>
 
 <section class="panel preview-panel">
-  <h2>02 / 코덱스 명령어</h2>
-  <div class="warning" id="warning"></div>
-  <div class="preview" id="preview" aria-live="polite"></div>
-  <div class="actions">
-    <button class="primary" id="copy">명령어 복사</button>
-    <button id="save">TXT 저장</button>
+  <h2>02 / 실시간 연출 프리뷰 <span class="preview-ver">V2.4</span></h2>
+  <p class="hint">프리셋, 제품명, 사진, 화면비율에 따라 바뀌는 가벼운 시안입니다. 실제 AI 생성 결과와 다를 수 있습니다.</p>
+  <div class="stage-holder">
+    <div class="stage style-auto" id="stage">
+      <div class="stage-grid" aria-hidden="true"></div>
+      <div class="stage-noise" aria-hidden="true"></div>
+      <div class="stage-kicker" id="stageKicker">KYUBUKI / MOTION STUDY</div>
+      <div class="stage-orbit" aria-hidden="true"></div>
+      <div class="stage-photo-area"><img id="stagePhoto" alt="선택한 제품 참고사진 미리보기" hidden>
+        <div id="stageFallback" class="bottle" aria-hidden="true"><div class="bottle-cap"></div><div class="bottle-body"><div class="bottle-label"><span>PRODUCT</span><b>SHAMPOO</b><small>PREVIEW ONLY</small></div></div></div>
+      </div>
+      <div class="stage-badge" id="stageBadge">NEW / PRODUCT</div>
+      <div class="stage-copy"><div class="stage-eyebrow" id="stageEyebrow">01 / PRODUCT FOCUS</div><div class="stage-title" id="stageTitle">제품 소개</div><div class="stage-sub" id="stageSub">깔끔한 제품 중심 모션</div></div>
+      <div class="stage-foot">KYUBUKI STUDIO <span id="stageRatio">16:9</span></div>
+    </div>
   </div>
-  <div class="status" id="status" role="status"></div>
-  <p class="hint">참고: 이 페이지는 <strong>프롬프트 생성기</strong>입니다. 업로드한 이미지를 실제 제작 엔진에 직접 전송하는 기능은 없고, <strong>참고사진을 Codex에도 직접 첨부하도록 안내하는 지시문과 파일명 정보</strong>를 프롬프트에 포함합니다.</p>
-  <div class="note">제품 설명 / 프리뷰 프리셋은 제품 광고처럼 과장하기보다, <strong>제품 정체성 보존 + 깔끔한 소개 모션</strong>에 초점을 맞췄습니다.</div>
+  <div class="style-description"><strong id="styleLabel">AI 자율</strong><p id="styleDescription">내용에 맞춰 그래픽과 타이포그래피를 조합합니다.</p></div>
+  <div class="note">사진은 원본을 화면에 배치한 **레이아웃 시뮬레이션**입니다. 이 프리뷰에서 실제 누끼 제거·영상 렌더링이 이루어지는 것은 아닙니다.</div>
+  <div class="warning" id="warning"></div>
 </section>
 </div>
+<section class="panel prompt-bottom" id="promptSection">
+ <div class="prompt-top"><div><h2>03 / 코덱스 실행 명령어</h2><p class="hint">아래 명령어를 복사해 Codex에 붙여 넣으세요. 참고사진은 Codex에도 직접 첨부해야 합니다.</p></div>
+ <div class="actions"><button class="primary" id="copy">명령어 복사</button><button id="save">TXT 저장</button><button type="button" id="togglePrompt" aria-expanded="false">명령어 펼치기</button></div></div>
+ <div class="status" id="status" role="status"></div>
+ <div class="preview" id="preview" aria-live="polite" hidden></div>
+</section>
 <footer>WEB TOOL · 브라우저 저장 지원 · 기본 출력 4K UHD / 24fps / 16:9</footer>
 </main>
 <script>
+
+const previewStyles={
+"AI 자율 판단":["auto","AI 자율","내용과 이미지에 맞춰 세련된 그래픽을 자동 조합합니다.","01 / CREATIVE MOTION","깔끔한 제품 중심 모션"],
+"과학·기술 인포그래픽":["science","과학 다큐","차가운 블루 그리드·측정선·기술 도식을 강조합니다.","01 / TECHNICAL ANALYSIS","정밀한 수치와 과학적 구성"],
+"빈티지 에디토리얼 콜라주":["collage","에디토리얼","인쇄물·종이 질감과 비스듬한 사진 배치를 조합합니다.","01 / EDITORIAL CUT","빈티지한 잡지 스타일"],
+"시네마틱 다큐멘터리":["cinema","시네마틱","어두운 배경과 절제된 금빛 조명, 영화 같은 여백을 사용합니다.","01 / CINEMATIC FILM","빛과 그림자의 시네마틱 연출"],
+"키네틱 타이포그래피":["data","키네틱 타이포","큰 글자와 리듬감 있는 구조로 메시지를 강조합니다.","01 / MOTION TYPE","핵심 문구 중심 타이포그래피"],
+"레트로 유머":["humor","레트로 유머","만화 같은 강렬한 배경과 스티커형 강조 문구를 사용합니다.","01 / RETRO FUN","재미있는 리액션 스타일"],
+"제품 설명 / 제품 프리뷰":["product","제품 설명 / 프리뷰","아이보리 스튜디오 배경에 제품을 크게 배치하는 고급 제품 소개 느낌입니다.","01 / PRODUCT SHOWCASE","프리미엄 제품 히어로 컷"],
+"데이터 시각화":["data","데이터 시각화","도표·눈금·숫자를 중심으로 체계적으로 구성합니다.","01 / DATA VISUAL","정보와 수치가 중심인 연출"],
+"복합 스타일":["auto","복합 스타일","설명 목적에 맞춰 여러 비주얼 스타일을 섞습니다.","01 / MIXED DESIGN","장면마다 다른 시각적 구성"]
+};
+let previewImageUrl=null;
+function updateVisualPreview(){
+ const settings=previewStyles[val('style')]||previewStyles["AI 자율 판단"];
+ const stage=$('stage');
+ stage.className='stage style-'+settings[0]+(val('aspect')==='9:16'?' ratio-portrait':'');
+ $('styleLabel').textContent=settings[1];$('styleDescription').textContent=settings[2];$('stageEyebrow').textContent=settings[3];$('stageSub').textContent=settings[4];
+ const name=val('productName').trim();const script=val('script').trim();
+ const first=(name||script.split(/[.!?。\n]/)[0]||'제품 소개').trim();
+ $('stageTitle').textContent=first.length>36?first.slice(0,35)+'…':first;
+ $('stageRatio').textContent=val('aspect');
+ $('stageBadge').textContent=settings[0]==='humor'?'WOW!':settings[0]==='science'?'SPEC / 01':settings[0]==='product'?'PRODUCT / 01':'KYUBUKI';
+}
+function updatePreviewPhoto(){
+ if(previewImageUrl){URL.revokeObjectURL(previewImageUrl);previewImageUrl=null}
+ if(uploadedFiles.length){previewImageUrl=URL.createObjectURL(uploadedFiles[0]);$('stagePhoto').src=previewImageUrl;$('stagePhoto').hidden=false;$('stageFallback').hidden=true;}
+ else{$('stagePhoto').removeAttribute('src');$('stagePhoto').hidden=true;$('stageFallback').hidden=false;}
+ updateVisualPreview();
+}
+$('togglePrompt').addEventListener('click',()=>{
+ const expanded=$('preview').hidden;
+ $('preview').hidden=!expanded;$('togglePrompt').textContent=expanded?'명령어 접기':'명령어 펼치기';$('togglePrompt').setAttribute('aria-expanded',String(expanded));
+});
+
 const defs=[
 ['purpose',['유튜브 본편용 인포그래픽','유튜브 쇼츠 / 릴스','제품 설명 / 제품 프리뷰','비교·실험 결과 시각화','시네마틱 인트로·아웃트로'],0],
 ['style',['AI 자율 판단','과학·기술 인포그래픽','빈티지 에디토리얼 콜라주','시네마틱 다큐멘터리','키네틱 타이포그래피','레트로 유머','제품 설명 / 제품 프리뷰','데이터 시각화','복합 스타일'],0],
@@ -223,7 +299,7 @@ const presetMap={
 };
 function setPreset(key){const p=presetMap[key]; if(!p)return; const ids=['purpose','style','density','texture','color','timing','stickers','motion','creative']; ids.forEach((id,i)=>{const el=$(id); if(el.tagName==='SELECT') el.selectedIndex=p[i]; else el.value=p[i];}); document.querySelectorAll('#presets button').forEach(b=>b.classList.toggle('active',b.dataset.p===key)); update();}
 $('presets').addEventListener('click',e=>{const b=e.target.closest('button[data-p]'); if(!b)return; setPreset(b.dataset.p);});
-function updateUploads(){const thumbs=$('thumbs'); thumbs.innerHTML='';
+function updateUploads(){const thumbs=$('thumbs'); thumbs.innerHTML=''; updatePreviewPhoto();
  if(!uploadedFiles.length){$('uploadSummary').textContent='업로드된 참고사진 없음'; update(); return;}
  $('uploadSummary').textContent=`업로드된 참고사진 ${uploadedFiles.length}장 · ${uploadedFiles.map(f=>f.name).join(', ')}`;
  uploadedFiles.forEach(file=>{const box=document.createElement('div'); box.className='thumb'; const img=document.createElement('img'); const name=document.createElement('div'); name.className='name'; name.textContent=file.name; box.append(img,name); thumbs.append(box); const reader=new FileReader(); reader.onload=e=>img.src=e.target.result; reader.readAsDataURL(file);});
@@ -249,6 +325,7 @@ function update(){
   const productSection=productMode?`\n\n[제품 설명 / 제품 프리뷰 특화 지침]\n이 작업은 제품 설명 또는 제품 프리뷰 성격의 모션그래픽이야.${val('productName').trim()?` 제품명은 "${val('productName').trim()}"이다.`:''}\n제품이 중심 피사체가 되도록 구성하고, 한눈에 제품이 잘 보이는 히어로 컷, 라벨 클로즈업, 핵심 특징 타이포, 성분/특징/용도 요약, 깔끔한 빛 반사와 그림자를 활용해줘. 과장 광고처럼 과도하게 꾸미기보다 프리미엄하고 정돈된 제품 소개 톤으로 연출해줘.${val('productCutout')?' 제품 참고사진이 있으면 배경 제거(누끼) 후 제품 단독 오브젝트로 활용해줘.':''}${val('labelProtect')?' 라벨·로고·문구는 최대한 정확히 보존해줘.':''}${val('noInvent')?' 제품 정보가 애매하면 새로운 제품 디테일을 임의 생성하지 마.':''}`:'';
   prompt=`KYUBUKI MOTION STUDIO의 AGENTS.md 및 기존 디자인 시스템을 적용하여 다음 대본을 실제 모션그래픽으로 제작해줘.\n\n[대본 / 자막]\n${val('script').trim()||'(대본을 입력하세요)'}\n\n[업로드 참고자료]\n${uploadedSummary}\n\n[사용자 입력 참고사항]\n제품명: ${val('productName').trim()||'미입력'}\n추가 참고사항: ${val('references').trim()||'없음'}\n\n[아트 디렉션]\n영상 목적: ${val('purpose')}\n연출 스타일: ${val('style')}\n질감: ${val('texture')}\n색감: ${val('color')}\n정보 밀도: ${val('density')}\n스티커 활용도: ${val('stickers')}/10 (문맥에 필요할 때만)\n애니메이션 역동성: ${val('motion')}/10\n창의성: ${val('creative')}/10\n화면 언어: ${val('lang')}\n\n[제작 및 출력]\n타이밍: ${timing}\n시안: ${val('variants')}\n해상도: ${size} / ${val('aspect')} / ${val('fps')}\n출력: ${val('output')} / Rec.709 SDR\n제작 모드: ${val('quality')}\n${productSection}\n\n[필수 지침]\n대본의 의미를 시각화하고 연출은 자율적으로 판단해줘. 과학 설명은 정교한 도식·측정선·벡터 형태 변화로, 유머와 경험담은 필요할 때만 빈티지 스티커·콜라주로 표현해줘. 기존 템플릿을 기계적으로 반복하지 말고, 라이선스가 확인된 자산 또는 자체 제작 그래픽만 사용해줘. 검증되지 않은 수치와 제품 정보를 임의로 만들지 마. 스토리보드, 실제 구현, 프리뷰 검수, 최종 렌더링 및 검증까지 진행해줘. 기존 결과물을 보존하고 생성 파일 위치와 미검증 항목을 알려줘.${durationRules}`;
   $('preview').textContent=prompt;
+  updateVisualPreview();
   try{localStorage.setItem('kyubuki-v23', JSON.stringify({
     script:val('script'), productName:val('productName'), references:val('references'),
     purpose:$('purpose').selectedIndex, style:$('style').selectedIndex, density:$('density').selectedIndex, texture:$('texture').selectedIndex, color:$('color').selectedIndex,
@@ -258,9 +335,9 @@ function update(){
     productCutout:val('productCutout'), labelProtect:val('labelProtect'), noInvent:val('noInvent')
   }));}catch{}
 }
-$('reset').onclick=()=>{for(const [id,,def] of defs){$(id).selectedIndex=def;} $('script').value='아무리 좋은 제품이라도 작업성이 떨어지면 결국 손이 가지 않습니다.'; $('productName').value=''; $('references').value=''; $('seconds').value=10; $('stickers').value=2; $('motion').value=6; $('creative').value=8; $('productCutout').checked=true; $('labelProtect').checked=true; $('noInvent').checked=true; uploadedFiles=[]; $('refImages').value=''; $('thumbs').innerHTML=''; $('uploadSummary').textContent='업로드된 참고사진 없음'; setPreset('auto'); $('status').textContent='기본값으로 초기화했습니다.'; update();};
+$('reset').onclick=()=>{for(const [id,,def] of defs){$(id).selectedIndex=def;} $('script').value='아무리 좋은 제품이라도 작업성이 떨어지면 결국 손이 가지 않습니다.'; $('productName').value=''; $('references').value=''; $('seconds').value=10; $('stickers').value=2; $('motion').value=6; $('creative').value=8; $('productCutout').checked=true; $('labelProtect').checked=true; $('noInvent').checked=true; uploadedFiles=[]; updatePreviewPhoto(); $('refImages').value=''; $('thumbs').innerHTML=''; $('uploadSummary').textContent='업로드된 참고사진 없음'; setPreset('auto'); $('status').textContent='기본값으로 초기화했습니다.'; update();};
 $('copy').onclick=async()=>{if(!val('script').trim()){$('status').textContent='먼저 대본을 입력하세요.';return}try{await navigator.clipboard.writeText(prompt);$('status').textContent='복사 완료! Codex에 붙여 넣으세요.'}catch{const t=document.createElement('textarea');t.value=prompt;document.body.append(t);t.select();let ok=false;try{ok=document.execCommand('copy')}catch{}t.remove();$('status').textContent=ok?'복사 완료!':'자동 복사가 차단되었습니다. 오른쪽 명령어를 직접 선택하여 복사하세요.'}};
-$('save').onclick=()=>{const u=URL.createObjectURL(new Blob([prompt],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download='KYUBUKI_Codex_Prompt_V2.3.txt';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$('status').textContent='TXT 저장을 요청했습니다.'};
+$('save').onclick=()=>{const u=URL.createObjectURL(new Blob([prompt],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download='KYUBUKI_Codex_Prompt_V2.4.txt';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$('status').textContent='TXT 저장을 요청했습니다.'};
 for(const el of document.querySelectorAll('textarea,input,select')) el.addEventListener('input',update);
 try{const saved=JSON.parse(localStorage.getItem('kyubuki-v23')||'null'); if(saved){ if(saved.script!=null) $('script').value=saved.script; if(saved.productName!=null) $('productName').value=saved.productName; if(saved.references!=null) $('references').value=saved.references; ['purpose','style','density','texture','color','timing','variants','resolution','fps','aspect','output','quality','lang'].forEach(id=>{if(saved[id]!=null) $(id).selectedIndex=saved[id];}); ['seconds','stickers','motion','creative'].forEach(id=>{if(saved[id]!=null) $(id).value=saved[id];}); ['productCutout','labelProtect','noInvent'].forEach(id=>{if(saved[id]!=null) $(id).checked=saved[id];}); }}catch{}
 update();
