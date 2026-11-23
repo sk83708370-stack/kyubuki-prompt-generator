@@ -1,212 +1,269 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KYUBUKI — Prompt Generator V2.2</title><style>
-:root{color-scheme:dark;--bg:#101010;--panel:#191a1b;--line:#343536;--muted:#a4a5a7;--ink:#f0eee8;--red:#b43932;--blue:#8dbcce}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 system-ui,'Malgun Gothic',sans-serif}main{max-width:1100px;margin:auto;padding:32px 22px}header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center;gap:16px}h1{font-size:clamp(24px,4vw,36px);letter-spacing:-1px;line-height:1.13;margin:8px 0}small,.muted{color:var(--muted)}.eyebrow{font:11px/1.5 monospace;letter-spacing:2px;color:var(--blue)}.seal{border:2px solid var(--red);color:#e4746e;font-weight:800;padding:5px 9px;white-space:nowrap;transform:rotate(-4deg)}.layout{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:start}.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}h2{font-size:16px;margin:0 0 16px}label{display:block;font-weight:600;margin-bottom:6px}textarea,select,input[type=number]{width:100%;font:inherit;color:var(--ink);background:#111;border:1px solid #414141;border-radius:7px;padding:10px}textarea{resize:vertical;min-height:110px}textarea:focus,select:focus{outline:2px solid var(--blue);outline-offset:1px}.pairs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:15px}.wide{grid-column:1/-1}.rangehead{display:flex;justify-content:space-between;gap:8px}.value{color:var(--blue)}input[type=range]{width:100%;accent-color:var(--blue)}.between{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}button{font:inherit;font-weight:700;cursor:pointer;border:1px solid var(--line);border-radius:7px;padding:11px 14px;background:#262728;color:var(--ink)}button:hover{filter:brightness(1.2)}.primary{background:var(--red);border-color:var(--red);color:white;flex:1}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 16px}.chips button{font-size:12px;padding:6px 9px}.preview{white-space:pre-wrap;overflow-wrap:anywhere;background:#111;padding:15px;border-radius:7px;border:1px solid #333;min-height:400px;font:13px/1.75 system-ui,sans-serif}.status{min-height:23px;color:var(--blue);margin-top:5px}.hint{font-size:12px;color:var(--muted);margin:10px 0 0}footer{margin-top:20px;color:var(--muted);font-size:12px}@media(max-width:760px){.layout{grid-template-columns:1fr}.panel{padding:15px}main{padding:20px 12px}.preview{min-height:250px}}@media(max-width:380px){.pairs{grid-template-columns:1fr}.wide{grid-column:auto}}
-
-:root{--bg:#101113;--panel:#191b1e;--line:#353a40;--muted:#a9adb4;--ink:#f7f5f0;--red:#bd443d;--blue:#95cbe0}
-body{background:radial-gradient(ellipse at top left,#21262a 0%,#101113 45%);min-height:100vh}
-main{max-width:1230px}.layout{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);align-items:start}
-.panel{box-shadow:0 10px 32px #0002}h2{font-size:17px}
-.field{margin-bottom:15px}.field>label,.field>div>label{display:block;font-weight:650;margin-bottom:7px}
-.field>.hint{margin-top:6px}
-input[type=text],input[type=number],textarea,select{width:100%;font:inherit;border:1px solid #414650;border-radius:8px;padding:10px;background:#101113;color:var(--ink)}
-textarea{resize:vertical}input[type=checkbox]{accent-color:var(--blue);width:16px;height:16px}
-.section-head{margin:24px 0 12px;border-top:1px solid var(--line);padding-top:18px;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:750;color:#dbe6eb}
-.section-head:first-child{margin-top:0;border:0;padding:0}
-.chips button.active{background:#314951;border-color:#95cbe0;color:#d7f5ff}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-.select-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.checkline{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:#d9dfe4;padding:5px 0}
-.checkline label{cursor:pointer}
-details{border:1px solid var(--line);padding:0 14px;border-radius:9px;background:#16181b;margin-top:14px}
-summary{cursor:pointer;padding:14px 2px;font-weight:700;color:#d6e4e9}
-.details-inner{padding:0 0 14px}
-.note{padding:10px 12px;background:#1d252a;border-left:3px solid var(--blue);font-size:12px;color:#bcd1d9;border-radius:4px}
-.mini{font-size:11px;color:var(--muted)}
-.preview{max-height:680px;overflow:auto;min-height:420px;white-space:pre-wrap;line-height:1.65}
-.preview-panel{position:sticky;top:16px}
-.version{font:11px monospace;color:var(--blue);margin-top:5px}
-.input-heading{color:var(--blue);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
-.warning{font-size:12px;color:#ffbd94;min-height:1.5em;margin:9px 0}
-#status{font-size:12px;min-height:20px}.panel .actions button{min-width:90px}
-@media(max-width:850px){.layout{grid-template-columns:1fr}.preview-panel{position:static}.select-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:450px){.two,.select-grid{grid-template-columns:1fr}.panel{padding:16px}}
-</style></head><body><main><header><div><div class="eyebrow">KYUBUKI / CREATIVE MOTION STUDIO</div><h1>만능 모션그래픽 생성기 V2.2</h1><small>2027 셀프세차 입문가이드 · CODEX PROMPT CONSOLE</small></div><div class="seal">규북이</div></header>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>KYUBUKI — Prompt Generator V2.3</title>
+<style>
+:root{color-scheme:dark;--bg:#101113;--panel:#181a1d;--line:#343942;--muted:#a5aab3;--ink:#f2efe8;--red:#b74038;--blue:#8ec0d2;--soft:#121417;--chip:#272b31}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 system-ui,'Malgun Gothic',sans-serif}
+main{max-width:1220px;margin:auto;padding:28px 18px} header{display:flex;justify-content:space-between;gap:18px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:18px}
+.eyebrow{font:11px/1.5 ui-monospace,monospace;letter-spacing:2px;color:var(--blue)} h1{margin:8px 0 6px;font-size:clamp(24px,4vw,36px);line-height:1.12} small,.muted{color:var(--muted)}
+.seal{border:2px solid var(--red);color:#e67a74;padding:6px 10px;font-weight:800;transform:rotate(-4deg);white-space:nowrap}
+.layout{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;align-items:start} .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.16)}
+.preview-panel{position:sticky;top:14px} h2{margin:0 0 14px;font-size:17px} label{display:block;font-weight:700;margin-bottom:6px}
+textarea,select,input[type=text],input[type=number]{width:100%;font:inherit;color:var(--ink);background:#0f1114;border:1px solid #454a52;border-radius:8px;padding:10px}
+textarea{resize:vertical;min-height:110px} textarea:focus,select:focus,input:focus{outline:2px solid var(--blue);outline-offset:1px}
+button{font:inherit;font-weight:700;cursor:pointer;border:1px solid var(--line);border-radius:8px;padding:10px 13px;background:#262a30;color:var(--ink)} button:hover{filter:brightness(1.15)}
+.primary{background:var(--red);border-color:var(--red);color:#fff}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.full{grid-column:1/-1}.hint{font-size:12px;color:var(--muted);margin-top:6px}.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 16px}
+.chips button{padding:7px 10px;background:var(--chip)} .chips button.active{background:#30424b;border-color:var(--blue);color:#dff7ff}
+.section-title{margin:22px 0 12px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;font-weight:800;letter-spacing:.05em;color:var(--blue);text-transform:uppercase}
+.rangehead{display:flex;justify-content:space-between;align-items:center;gap:8px}.value{color:var(--blue)} input[type=range]{width:100%;accent-color:var(--blue)} .between{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px}
+.preview{white-space:pre-wrap;overflow-wrap:anywhere;background:#101215;padding:14px;border-radius:8px;border:1px solid #30353c;min-height:420px;max-height:700px;overflow:auto;font:13px/1.72 system-ui,sans-serif}
+.status{min-height:22px;color:var(--blue);margin-top:6px;font-size:12px}.warning{min-height:20px;color:#f3bb91;font-size:12px;margin-bottom:8px}.note{background:#11171b;border-left:3px solid var(--blue);padding:10px 12px;border-radius:6px;font-size:12px;color:#cddfe6}
+.uploadbox{border:1px dashed #52606f;border-radius:10px;padding:14px;background:#111318}.uploadbox input{margin-top:6px}.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:10px}
+.thumb{background:#0f1114;border:1px solid #333842;border-radius:8px;padding:6px}.thumb img{width:100%;height:72px;object-fit:cover;border-radius:6px;display:block}.thumb .name{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.35;word-break:break-all}
+.checkline{display:flex;gap:8px;align-items:flex-start;padding-top:3px}.checkline input{margin-top:3px}.mini{font-size:11px;color:var(--muted)} details{margin-top:14px;border:1px solid var(--line);border-radius:9px;background:#15181b} summary{cursor:pointer;padding:12px 14px;font-weight:700} details .inner{padding:0 14px 14px}
+footer{margin-top:18px;color:var(--muted);font-size:12px}
+@media(max-width:860px){.layout{grid-template-columns:1fr}.preview-panel{position:static}} @media(max-width:460px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div>
+    <div class="eyebrow">KYUBUKI / CREATIVE MOTION STUDIO</div>
+    <h1>만능 모션그래픽 생성기 V2.3</h1>
+    <small>제품 설명 프리셋 + 참고사진 업로드 지원 · CODEX PROMPT CONSOLE</small>
+  </div>
+  <div class="seal">규북이</div>
+</header>
 <div class="layout">
 <section class="panel">
-<h2>01 / 내용 · 연출 설정</h2>
-<div class="field"><label for="script">대본 또는 전달할 내용</label>
-<textarea id="script" rows="6" placeholder="대본, 자막, 설명을 붙여 넣으세요.">아무리 좋은 제품이라도 작업성이 떨어지면 결국 손이 가지 않습니다.</textarea>
-<div class="hint">실제 영상·제품 수치·브랜드 문구가 중요하다면 아래 참고자료도 함께 적어주세요.</div></div>
-<div class="field"><label for="purpose">영상의 목적</label><select id="purpose"></select></div>
-<div class="input-heading">빠른 연출 프리셋</div><div class="chips" id="presets">
-<button type="button" data-p="auto">AI 자율</button><button type="button" data-p="science">과학 다큐</button><button type="button" data-p="collage">에디토리얼</button><button type="button" data-p="cinema">시네마틱</button><button type="button" data-p="humor">레트로 유머</button><button type="button" data-p="type">타이포</button>
-</div>
-<div class="select-grid">
-<div class="field"><label for="style">연출 스타일</label><select id="style"></select></div>
-<div class="field"><label for="density">정보 밀도</label><select id="density"></select></div>
-<div class="field"><label for="tone">전달 분위기</label><select id="tone"></select></div>
-<div class="field"><label for="visuals">시각화 방식</label><select id="visuals"></select></div>
-</div>
-<div class="section-head">02 / 영상 규격</div>
-<div class="select-grid">
-<div class="field"><label for="timing">영상 길이 기준</label><select id="timing"></select></div>
-<div class="field"><label for="seconds">목표 길이 (초)</label><input id="seconds" type="number" min="3" max="300" step="1" value="10"><div class="mini" id="length-note"></div></div>
-<div class="field"><label for="aspect">화면 비율</label><select id="aspect"></select></div>
-<div class="field"><label for="resolution">해상도</label><select id="resolution"></select></div>
-<div class="field"><label for="fps">프레임</label><select id="fps"></select></div>
-<div class="field"><label for="output">출력 형식</label><select id="output"></select></div>
-<div class="field"><label for="lang">화면 언어</label><select id="lang"></select></div>
-<div class="field"><label for="variants">시안 수</label><select id="variants"></select></div>
-</div>
-<div class="section-head">03 / 편집에 바로 쓰는 설정</div>
-<div class="select-grid">
-<div class="field"><label for="background">화면 배경</label><select id="background"></select></div>
-<div class="field"><label for="sound">오디오 처리</label><select id="sound"></select></div>
-<div class="field"><label for="safearea">텍스트 안전영역</label><select id="safearea"></select></div>
-<div class="field"><label for="typography">글자 디자인</label><select id="typography"></select></div>
-</div>
-<div class="field"><label for="references">참고자료 / 사용할 자산 / 꼭 지킬 내용 (선택)</label><textarea id="references" rows="3" placeholder="예: 내 영상 clip01.mp4의 00:14~00:22 사용 / 특정 제품의 공식 스펙만 사용 / 로고 변형 금지"></textarea></div>
-<div class="field"><label for="avoid">금지할 연출 (선택)</label><input id="avoid" type="text" placeholder="예: 과한 반짝이, 무작위 스티커, 불필요한 줌"></div>
-<div class="checkline"><input id="accuracy" type="checkbox" checked><label for="accuracy">근거 없는 수치·제품 정보·과장 표현 생성 금지</label></div>
-<div class="checkline"><input id="editability" type="checkbox" checked><label for="editability">프로젝트 소스 보존 + 수정 가능한 구성 요청</label></div>
-<div class="checkline"><input id="validation" type="checkbox" checked><label for="validation">최종 결과 프레임·길이·오디오·문구 검증 요청</label></div>
-<details id="advanced"><summary>고급 연출 옵션 <span class="mini">(필요할 때만)</span></summary>
-<div class="details-inner">
-<div class="select-grid">
-<div class="field"><label for="texture">질감</label><select id="texture"></select></div>
-<div class="field"><label for="color">색감</label><select id="color"></select></div>
-<div class="field"><label for="motion">동작 속도</label><select id="motion"></select></div>
-<div class="field"><label for="quality">작업 우선순위</label><select id="quality"></select></div>
-</div>
-<div class="field"><label for="creative">연출 자유도 <strong id="creative-value"></strong></label><input type="range" id="creative" min="1" max="10" value="7"></div>
-<div class="field"><label for="stickers">장식·스티커 강도 <strong id="stickers-value"></strong></label><input type="range" id="stickers" min="0" max="10" value="2"></div>
-<div class="note">슬라이더는 AI 모델 내부 설정값이 아니라 제작 방향을 전달하는 참고 지시입니다.</div>
-</div></details>
-<div class="actions"><button type="button" id="reset">초기화</button><button type="button" id="clear-script">대본 지우기</button></div>
+  <h2>01 / 대본 · 연출 설정</h2>
+  <div>
+    <label for="script">대본 또는 전달할 내용</label>
+    <textarea id="script" placeholder="대본이나 자막을 붙여 넣으세요.">아무리 좋은 제품이라도 작업성이 떨어지면 결국 손이 가지 않습니다.</textarea>
+    <div class="hint">제품 소개 영상이면 제품명, 특징, 강조 포인트를 같이 적는 게 좋습니다.</div>
+  </div>
+
+  <div class="section-title">빠른 연출 프리셋</div>
+  <div class="chips" id="presets">
+    <button type="button" data-p="auto">AI 자율</button>
+    <button type="button" data-p="science">과학 다큐</button>
+    <button type="button" data-p="collage">핀터레스트 콜라주</button>
+    <button type="button" data-p="cinema">시네마틱</button>
+    <button type="button" data-p="humor">레트로 유머</button>
+    <button type="button" data-p="product">제품 설명 / 프리뷰</button>
+  </div>
+
+  <div class="grid">
+    <div>
+      <label for="productName">제품명 (선택)</label>
+      <input id="productName" type="text" placeholder="예: 리퀴드엘리먼트 중성 카샴푸">
+      <div class="hint">제품 설명 프리셋과 함께 쓰면 제품명 보존 지시가 강화됩니다.</div>
+    </div>
+    <div>
+      <label for="purpose">영상 목적</label>
+      <select id="purpose"></select>
+    </div>
+    <div>
+      <label for="style">연출 스타일</label>
+      <select id="style"></select>
+    </div>
+    <div>
+      <label for="density">정보 밀도</label>
+      <select id="density"></select>
+    </div>
+    <div>
+      <label for="texture">질감</label>
+      <select id="texture"></select>
+    </div>
+    <div>
+      <label for="color">색감</label>
+      <select id="color"></select>
+    </div>
+  </div>
+
+  <div class="section-title">참고사진 업로드</div>
+  <div class="uploadbox">
+    <label for="refImages">참고사진 업로드 (선택)</label>
+    <input id="refImages" type="file" accept="image/*" multiple>
+    <div class="hint">업로드 안 해도 프롬프트는 생성됩니다. 업로드하면 프롬프트에 <strong>참고사진 우선 사용 / 제품 누끼 / 라벨 보존</strong> 지시가 자동 추가됩니다.</div>
+    <div id="uploadSummary" class="mini" style="margin-top:8px">업로드된 참고사진 없음</div>
+    <div id="thumbs" class="thumbs"></div>
+  </div>
+
+  <div class="grid" style="margin-top:14px">
+    <div class="full">
+      <label for="references">참고자료 / 꼭 지킬 내용 (선택)</label>
+      <textarea id="references" placeholder="예: 공식 제품 색상 유지 / 브랜드 로고·문구 임의 변경 금지 / 10초 제품 프리뷰"></textarea>
+    </div>
+  </div>
+
+  <div class="section-title">제작 및 출력</div>
+  <div class="grid">
+    <div>
+      <label for="timing">타이밍</label>
+      <select id="timing"></select>
+    </div>
+    <div>
+      <div class="rangehead"><label for="seconds">영상 길이(초)</label><b class="value" id="secondsVal"></b></div>
+      <input type="range" id="seconds" min="3" max="60" value="10">
+      <div class="between"><span>3초</span><span>60초</span></div>
+    </div>
+    <div>
+      <label for="variants">제작 시안</label>
+      <select id="variants"></select>
+    </div>
+    <div>
+      <label for="resolution">해상도</label>
+      <select id="resolution"></select>
+    </div>
+    <div>
+      <label for="fps">프레임</label>
+      <select id="fps"></select>
+    </div>
+    <div>
+      <label for="aspect">화면 비율</label>
+      <select id="aspect"></select>
+    </div>
+    <div>
+      <label for="output">출력 방식</label>
+      <select id="output"></select>
+    </div>
+    <div>
+      <label for="lang">화면 언어</label>
+      <select id="lang"></select>
+    </div>
+    <div>
+      <label for="quality">제작 모드</label>
+      <select id="quality"></select>
+    </div>
+  </div>
+
+  <details>
+    <summary>고급 옵션</summary>
+    <div class="inner">
+      <div class="grid">
+        <div class="full">
+          <div class="rangehead"><label for="stickers">스티커 활용도</label><b class="value" id="stickersVal"></b></div>
+          <input type="range" id="stickers" min="0" max="10" value="2">
+          <div class="between"><span>없음</span><span>적극 활용</span></div>
+        </div>
+        <div class="full">
+          <div class="rangehead"><label for="motion">애니메이션 역동성</label><b class="value" id="motionVal"></b></div>
+          <input type="range" id="motion" min="1" max="10" value="6">
+          <div class="between"><span>절제</span><span>다이내믹</span></div>
+        </div>
+        <div class="full">
+          <div class="rangehead"><label for="creative">창의성</label><b class="value" id="creativeVal"></b></div>
+          <input type="range" id="creative" min="1" max="10" value="8">
+          <div class="between"><span>보수적</span><span>실험적</span></div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <div class="checkline" style="margin-top:12px"><input id="productCutout" type="checkbox" checked><label for="productCutout">제품 참고사진이 있으면 제품만 정확히 분리(누끼)하여 사용</label></div>
+  <div class="checkline"><input id="labelProtect" type="checkbox" checked><label for="labelProtect">라벨·로고·문구·용기 형태를 최대한 정확히 보존</label></div>
+  <div class="checkline"><input id="noInvent" type="checkbox" checked><label for="noInvent">제품 정보가 불명확하면 임의로 다른 제품을 만들지 않기</label></div>
+
+  <div class="actions">
+    <button type="button" id="reset">기본값 초기화</button>
+    <button type="button" id="clearUploads">업로드 비우기</button>
+  </div>
 </section>
-<section class="panel preview-panel"><h2>04 / 코덱스 실행 명령어</h2>
-<div class="version">KYUBUKI MOTION STUDIO · V2.2</div>
-<p class="mini">설정을 바꾸면 명령어가 즉시 갱신됩니다. 복사해 기존 Codex 프로젝트에 붙여 넣으세요.</p>
-<div id="warning" class="warning"></div>
-<div class="preview" id="preview" aria-live="polite"></div>
-<div class="actions"><button type="button" class="primary" id="copy">명령어 복사</button><button type="button" id="save">TXT 저장</button></div>
-<div id="status" role="status"></div>
-<p class="hint">생성기는 명령어를 작성하는 도구입니다. 실제 영상 렌더링·자산 확인·검증은 Codex 프로젝트에서 수행됩니다. 프로젝트에 AGENTS.md가 없다면 해당 지침은 건너뛰도록 요청합니다.</p>
-</section></div></main><script>
-(function(){
-"use strict";
+
+<section class="panel preview-panel">
+  <h2>02 / 코덱스 명령어</h2>
+  <div class="warning" id="warning"></div>
+  <div class="preview" id="preview" aria-live="polite"></div>
+  <div class="actions">
+    <button class="primary" id="copy">명령어 복사</button>
+    <button id="save">TXT 저장</button>
+  </div>
+  <div class="status" id="status" role="status"></div>
+  <p class="hint">참고: 이 페이지는 <strong>프롬프트 생성기</strong>입니다. 업로드한 이미지를 실제 제작 엔진에 직접 전송하는 기능은 없고, <strong>참고사진을 Codex에도 직접 첨부하도록 안내하는 지시문과 파일명 정보</strong>를 프롬프트에 포함합니다.</p>
+  <div class="note">제품 설명 / 프리뷰 프리셋은 제품 광고처럼 과장하기보다, <strong>제품 정체성 보존 + 깔끔한 소개 모션</strong>에 초점을 맞췄습니다.</div>
+</section>
+</div>
+<footer>WEB TOOL · 브라우저 저장 지원 · 기본 출력 4K UHD / 24fps / 16:9</footer>
+</main>
+<script>
+const defs=[
+['purpose',['유튜브 본편용 인포그래픽','유튜브 쇼츠 / 릴스','제품 설명 / 제품 프리뷰','비교·실험 결과 시각화','시네마틱 인트로·아웃트로'],0],
+['style',['AI 자율 판단','과학·기술 인포그래픽','빈티지 에디토리얼 콜라주','시네마틱 다큐멘터리','키네틱 타이포그래피','레트로 유머','제품 설명 / 제품 프리뷰','데이터 시각화','복합 스타일'],0],
+['density',['AI 자율 판단','입문자용 직관적 설명','균형 잡힌 설명','고밀도 기술 설명'],0],
+['texture',['AI 자율 판단','클린 벡터','빈티지 인쇄','찢어진 종이·신문지','필름 그레인','하프톤·리소그래프'],0],
+['color',['AI 자율 판단','KYUBUKI 브랜드 컬러','모노톤','블랙·사이언스 블루','웜 아이보리','비비드 포인트','파스텔'],0],
+['timing',['지정 길이 기준','대본 길이 자동 판단','SRT 타임코드 우선'],0],
+['variants',['1종','2종','3종','4종','5종'],0],
+['resolution',['4K UHD','FHD'],0],
+['fps',['24fps','30fps','60fps'],0],
+['aspect',['16:9','9:16'],0],
+['output',['AI 자율 판단','전체 화면 MP4','투명 배경 ProRes 4444 MOV','MP4 및 투명 MOV 모두'],0],
+['quality',['고품질','빠른 제작','최고 완성도'],0],
+['lang',['한국어','영어','한국어·영어 병기'],0]
+];
 const $=id=>document.getElementById(id);
-const defs={
-purpose:["유튜브 본편 삽입용 인포그래픽","유튜브 쇼츠 / 릴스","독립형 설명 영상","비교·실험 결과 시각화","시네마틱 인트로·아웃트로"],
-style:["AI 자율 판단","과학·기술 인포그래픽","빈티지 에디토리얼 콜라주","시네마틱 다큐멘터리","키네틱 타이포그래피","레트로 유머","테크니컬 블루프린트","데이터 시각화","복합 스타일"],
-density:["균형 잡힌 설명","입문자용 간단 설명","고밀도 전문 설명","최소 텍스트·이미지 중심"],
-tone:["차분하고 신뢰감 있게","친근하고 위트 있게","전문적이고 분석적으로","감성적이고 영화처럼","빠르고 임팩트 있게"],
-visuals:["내용에 맞게 자동 선택","실물 영상·그래픽 혼합","2D 도식·아이콘 중심","큰 타이포그래피 중심","차트·수치 비교 중심","질감 있는 콜라주 중심"],
-timing:["대본 길이 자동 판단","정확한 길이로 제작","SRT 타임코드 우선"],
-aspect:["16:9","9:16","1:1"],
-resolution:["4K UHD","FHD"],
-fps:["24fps","30fps","60fps"],
-output:["MP4 / 전체 화면","투명 MOV / 알파 채널","MP4 + 투명 MOV","AI 자율 판단"],
-lang:["한국어","영어","한국어·영어 병기"],
-variants:["1종","2종","3종"],
-background:["영상에 자연스럽게 합성","단독 배경 장면","투명 배경 오버레이","AI 자율 판단"],
-sound:["원본 영상 오디오 유지 / 효과음 없음","무음 (편집에서 추가)","효과음만 제안·삽입","음악과 효과음은 별도 트랙으로 제안"],
-safearea:["일반 화면 5% 여백","쇼츠 UI 회피 안전영역","넉넉한 10% 여백"],
-typography:["한글 가독성 우선","큰 제목·짧은 문장","깔끔한 다큐멘터리","레트로 에디토리얼"],
-texture:["AI 자율 판단","클린 벡터","빈티지 인쇄","찢어진 종이·신문지","필름 그레인","하프톤·리소그래프"],
-color:["AI 자율 판단","KYUBUKI 브랜드 컬러","모노톤","블랙·사이언스 블루","웜 아이보리","비비드 포인트","파스텔"],
-motion:["표준·자연스러운 움직임","절제된 움직임","빠르고 다이내믹","시네마틱하고 부드럽게"],
-quality:["완성도 최우선","빠른 시안 후 고품질 확정","최소 리소스로 가볍게"]
+for(const [id,opts,def] of defs){const el=$(id); opts.forEach((v,i)=>{const o=document.createElement('option');o.textContent=v; if(i===def)o.selected=true; el.append(o);});}
+let prompt=''; let uploadedFiles=[];
+const presetMap={
+  auto:[0,0,0,0,0,0,5,6,8],
+  science:[0,1,3,1,3,0,2,4,6],
+  collage:[0,2,1,3,4,0,3,7,9],
+  cinema:[4,3,1,4,1,0,1,3,7],
+  humor:[0,5,1,5,5,0,4,8,9],
+  product:[2,6,2,1,4,0,1,5,6]
 };
-const defaultFields={script:"아무리 좋은 제품이라도 작업성이 떨어지면 결국 손이 가지 않습니다.",purpose:0,style:0,density:0,tone:0,visuals:0,timing:0,seconds:"10",aspect:0,resolution:0,fps:0,output:0,lang:0,variants:0,background:0,sound:0,safearea:0,typography:0,references:"",avoid:"",accuracy:true,editability:true,validation:true,texture:0,color:0,motion:0,quality:0,creative:"7",stickers:"2"};
-Object.entries(defs).forEach(([id,values])=>{
- const el=$(id);values.forEach(label=>{const option=document.createElement("option");option.textContent=label;el.appendChild(option)});
-});
-const allIds=Object.keys(defaultFields);
-function get(id){const el=$(id);return el.type==="checkbox"?el.checked:el.value}
-function set(id,value){const el=$(id);if(el.type==="checkbox")el.checked=Boolean(value);else if(el.tagName==="SELECT"&&typeof value==="number")el.selectedIndex=value;else el.value=value}
-function validSelect(id,value){return defs[id]&&defs[id].includes(value)}
-function restore(){
- try{
-  let current=localStorage.getItem("kyubuki-v22");
-  if(current){const values=JSON.parse(current);for(const id of allIds)if(Object.prototype.hasOwnProperty.call(values,id))set(id,values[id]);return}
-  let old=JSON.parse(localStorage.getItem("kyubuki-v21")||localStorage.getItem("kyubuki-v2")||"null");
-  if(old){
-    for(const id of ["script","style","density","texture","color","fps","aspect","resolution","lang","variants","quality"]){
-      if(old[id]!==undefined){if(defs[id]&&!validSelect(id,old[id]))continue;set(id,old[id])}
-    }
-    const oldTiming=old.timing;
-    if(oldTiming==="지정 길이 기준")set("timing","정확한 길이로 제작");
-    if(oldTiming==="SRT 타임코드 우선")set("timing","SRT 타임코드 우선");
-    if(old.seconds)set("seconds",old.seconds);
-    if(old.output==="투명 배경 ProRes 4444 MOV")set("output","투명 MOV / 알파 채널");
-    if(old.output==="MP4 및 투명 MOV 모두")set("output","MP4 + 투명 MOV");
-    if(old.output==="전체 화면 MP4")set("output","MP4 / 전체 화면");
-    if(old.creative)set("creative",old.creative);
-    if(old.stickers)set("stickers",old.stickers);
-  }
- }catch(e){}
+function setPreset(key){const p=presetMap[key]; if(!p)return; const ids=['purpose','style','density','texture','color','timing','stickers','motion','creative']; ids.forEach((id,i)=>{const el=$(id); if(el.tagName==='SELECT') el.selectedIndex=p[i]; else el.value=p[i];}); document.querySelectorAll('#presets button').forEach(b=>b.classList.toggle('active',b.dataset.p===key)); update();}
+$('presets').addEventListener('click',e=>{const b=e.target.closest('button[data-p]'); if(!b)return; setPreset(b.dataset.p);});
+function updateUploads(){const thumbs=$('thumbs'); thumbs.innerHTML='';
+ if(!uploadedFiles.length){$('uploadSummary').textContent='업로드된 참고사진 없음'; update(); return;}
+ $('uploadSummary').textContent=`업로드된 참고사진 ${uploadedFiles.length}장 · ${uploadedFiles.map(f=>f.name).join(', ')}`;
+ uploadedFiles.forEach(file=>{const box=document.createElement('div'); box.className='thumb'; const img=document.createElement('img'); const name=document.createElement('div'); name.className='name'; name.textContent=file.name; box.append(img,name); thumbs.append(box); const reader=new FileReader(); reader.onload=e=>img.src=e.target.result; reader.readAsDataURL(file);});
+ update();
 }
-const presets={
-auto:{style:0,visuals:0,tone:0,texture:0,color:0,motion:0,stickers:2},
-science:{style:1,visuals:2,tone:2,texture:1,color:3,motion:1,stickers:0},
-collage:{style:2,visuals:5,tone:1,texture:3,color:4,motion:0,stickers:5},
-cinema:{style:3,visuals:1,tone:3,texture:4,color:2,motion:3,stickers:0},
-humor:{style:5,visuals:5,tone:1,texture:5,color:5,motion:2,stickers:7},
-type:{style:4,visuals:3,tone:4,texture:1,color:1,motion:2,stickers:0}
-};
-function normalizeSeconds(){
- const v=Number(get("seconds"));
- return Number.isFinite(v)?Math.min(300,Math.max(3,Math.round(v))):10;
-}
-let prompt="";
+$('refImages').addEventListener('change',e=>{uploadedFiles=[...e.target.files]; updateUploads();});
+$('clearUploads').onclick=()=>{uploadedFiles=[]; $('refImages').value=''; updateUploads(); $('status').textContent='업로드 목록을 비웠습니다.'};
+function val(id){const el=$(id); return el.type==='checkbox'?el.checked:el.value;}
 function update(){
- const sec=normalizeSeconds(),fps=Number(get("fps").replace("fps","")),frames=sec*fps,kind=get("timing"),fixed=kind==="정확한 길이로 제작";
- const size=get("resolution")==="4K UHD"?(get("aspect")==="16:9"?"3840×2160":get("aspect")==="9:16"?"2160×3840":"2160×2160"):(get("aspect")==="16:9"?"1920×1080":get("aspect")==="9:16"?"1080×1920":"1080×1080");
- $("seconds").disabled=!fixed;
- $("length-note").textContent=fixed?"정확히 "+sec+"초 · "+frames+"프레임":"길이는 자동으로 판단 · 초 설정 미적용";
- $("creative-value").textContent=get("creative")+"/10";$("stickers-value").textContent=get("stickers")+"/10";
- let warning=[];
- if(get("output").includes("투명")&&get("background")==="단독 배경 장면")warning.push("투명 출력과 단독 배경이 함께 선택됨: 투명 출력에서는 배경을 제외하도록 명시");
- if(kind==="SRT 타임코드 우선"&&!get("script").includes("-->"))warning.push("SRT 타임코드가 입력되지 않음: Codex에서 SRT 파일 확인 필요");
- if(!get("script").trim())warning.push("대본이나 전달할 내용을 입력해 주세요.");
- if(get("purpose")==="유튜브 쇼츠 / 릴스"&&get("aspect")==="16:9")warning.push("쇼츠/릴스는 일반적으로 9:16이 적합합니다.");
- $("warning").textContent=warning.join(" · ");
- const timingRule=fixed?
-  "목표 길이 정확히 "+sec+"초 ("+frames+"프레임, "+fps+"fps). Composition, Sequence, 트랜지션, 인트로·아웃트로 모두 포함한 최종 파일 기준. 자막·내레이션과 길이가 충돌하면 원문을 변경하지 말고 작업 전 충돌 사항과 해결안을 제시한다.":
-  kind==="SRT 타임코드 우선"?"제공된 SRT의 실제 타임코드를 우선한다. SRT가 없으면 추측하지 말고 확인 요청. 영상 길이는 타임코드 기준으로 산정.":
-  "대본의 낭독 속도와 정보 밀도에 따라 길이를 자동 산정. 불필요한 늘이기·단축 금지.";
- const sections=[
- "당신은 KYUBUKI MOTION STUDIO의 시니어 모션 디자이너이자 영상 편집 엔지니어다. 기존 프로젝트의 AGENTS.md와 디자인 시스템이 존재하면 먼저 읽고 적용한다. 없으면 임의로 있다고 가정하지 않는다.",
- "[01. 전달할 내용]\n"+(get("script").trim()||"(내용 미입력)"),
- "[02. 용도와 핵심 연출]\n영상 목적: "+get("purpose")+"\n연출 스타일: "+get("style")+"\n전달 분위기: "+get("tone")+"\n정보 밀도: "+get("density")+"\n시각화 방식: "+get("visuals")+"\n화면 언어: "+get("lang"),
- "[03. 실제 제작 규격]\n타이밍: "+timingRule+"\n영상 규격: "+size+" / "+get("aspect")+" / "+get("fps")+" / Rec.709 SDR\n출력: "+get("output")+"\n시안: "+get("variants")+"\n화면 배경: "+get("background")+"\n오디오: "+get("sound")+"\n텍스트 안전영역: "+get("safearea")+"\n타이포그래피: "+get("typography"),
- "[04. 세부 아트 디렉션]\n질감: "+get("texture")+"\n색감: "+get("color")+"\n움직임: "+get("motion")+"\n작업 우선순위: "+get("quality")+"\n연출 자유도: "+get("creative")+"/10 (제작 참고 지시)\n장식·스티커: "+get("stickers")+"/10 (필요한 장면에서만)",
- "[05. 제공된 자산 및 제한]\n"+(get("references").trim()||"별도 참고자료 없음. 프로젝트 내 기존 자산을 확인하고 없는 자산은 있다고 가정하지 않는다.")+"\n금지할 연출: "+(get("avoid").trim()||"불필요한 전환·무분별한 장식·난잡한 효과"),
- "[06. 제작 과정]\n(1) 대본에서 핵심 메시지와 시각화 단위를 분석한다.\n(2) 구체적인 타임라인·스토리보드를 만든다.\n(3) 기존 프로젝트 구조와 자산을 확인하고 재사용한다.\n(4) 실제 모션그래픽을 구현하고 렌더링한다.\n(5) 시안별 차이를 분명히 한다. 서로 거의 같은 시안 수만 늘리지 않는다.\n(6) 결과물 파일 경로와 변경 사항, 미검증 항목을 명확히 보고한다.",
- "[07. 품질 기준]\n한글 폰트 깨짐·자막 잘림·오탈자·색상 불일치·부자연스러운 전환을 점검한다. 로고나 고유 상표의 형태를 임의로 변형하지 않는다. 참고 이미지나 외부 자산은 라이선스를 확인하고, 불분명하면 직접 제작한 요소로 대체한다. 수치나 비교 데이터는 출처와 조건을 표시한다. "+
- (get("accuracy")?"제품 스펙, 실험 수치, 과학적 인과관계, 성능 비교를 검증 없이 창작하거나 과장하지 않는다.":"정보의 사실성에 주의한다.")+
- (get("editability")?" 소스와 프로젝트 구성요소를 보존하고 수정 가능한 상태로 인계한다. 기존 결과물은 덮어쓰지 않는다.":"")+
- (get("validation")?" FFprobe 또는 동등한 도구로 FPS·실제 프레임 수·길이·해상도·오디오 스트림을 점검한다. 시각적 프리뷰도 직접 검수한다. 검증하지 못한 항목은 미검증이라고 표시한다.":"")
- ];
- if(get("output").includes("투명"))sections.push("[알파 채널 필수 검사]\n투명 출력은 코덱·픽셀포맷이 실제 알파 채널을 지원하는지 확인하고, 가능한 경우 ProRes 4444 MOV 등으로 출력한다. 검은 배경 MP4를 투명이라고 주장하지 않는다. 렌더 후 alpha 픽셀 유무를 검사하고, 지원하지 않는 환경에서는 명확히 보고한다.");
- if(fixed)sections.push("[프레임 정확도]\n최종 길이 "+sec+"초 = "+frames+"프레임. Remotion Composition의 durationInFrames뿐 아니라 최종 인코딩 파일의 실측 프레임 수도 일치해야 한다. 전환·오버레이가 총길이를 바꾸지 않게 하고 불일치 시 수정 후 재검증한다.");
- if(get("safearea")==="쇼츠 UI 회피 안전영역")sections.push("[쇼츠 안전영역]\n상단 프로필·하단 설명·오른쪽 인터랙션 버튼과 겹치지 않게 중요한 텍스트를 중앙 안전영역에 배치한다. 플랫폼마다 UI가 변하므로 프리뷰 확인 후 위치를 조정한다.");
- prompt=sections.join("\n\n");$("preview").textContent=prompt;
- try{const values={};for(const id of allIds)values[id]=get(id);localStorage.setItem("kyubuki-v22",JSON.stringify(values))}catch(e){}
- document.querySelectorAll("#presets button").forEach(btn=>{const p=presets[btn.dataset.p];btn.classList.toggle("active",Object.entries(p).every(([k,v])=>defs[k]?$(k).selectedIndex===v:Number(get(k))===v))});
+  for(const id of ['seconds','stickers','motion','creative']) $(id+'Val').textContent=val(id)+(id==='seconds'?'초':' / 10');
+  const portrait=val('aspect')==='9:16', uhd=val('resolution')==='4K UHD';
+  const size=uhd?(portrait?'2160×3840':'3840×2160'):(portrait?'1080×1920':'1920×1080');
+  const seconds=Number(val('seconds')), fps=parseInt(val('fps'),10), frames=seconds*fps, fixed=val('timing')==='지정 길이 기준';
+  const productMode=(val('style')==='제품 설명 / 제품 프리뷰')||(val('purpose')==='제품 설명 / 제품 프리뷰');
+  let warnings=[];
+  if(productMode && !val('productName').trim() && !uploadedFiles.length) warnings.push('제품명이나 참고사진이 있으면 제품 인식 정확도가 더 좋아집니다.');
+  if(val('timing')==='SRT 타임코드 우선' && !val('script').includes('-->')) warnings.push('SRT 타임코드 우선인데 본문에서 타임코드가 보이지 않습니다.');
+  if(productMode && val('aspect')==='16:9' && val('purpose')==='유튜브 쇼츠 / 릴스') warnings.push('쇼츠면 보통 9:16이 더 적합합니다.');
+  $('warning').textContent=warnings.join(' · ');
+  const timing=fixed?`고정 길이: 정확히 ${seconds}초 (${fps}fps × ${seconds}초 = ${frames}프레임). 각 시안의 최종 전체 길이를 동일하게 적용. 자동 연장·단축 금지.`:val('timing')==='SRT 타임코드 우선'?'SRT 원본 타임코드 우선 (길이 슬라이더 미적용; SRT 없으면 대본 길이 자동 판단)':'대본 길이 자동 판단 (길이 슬라이더 미적용)';
+  const durationRules=fixed?`\n\n[영상 길이 필수 검증]\n지정 길이 ${seconds}초를 최우선 제작 조건으로 적용해줘. Remotion의 실제 Composition 및 최종 렌더링 durationInFrames를 ${frames}, fps를 ${fps}로 설정하고 전환·인트로·아웃트로가 전체 길이를 늘리거나 줄이지 않도록 해줘. 렌더링 후 실제 프레임 수와 재생시간을 확인하고 오차가 있으면 수정 후 재렌더링해줘.`:'';
+  const uploadedSummary=uploadedFiles.length?`업로드된 참고사진 수: ${uploadedFiles.length}장\n업로드된 참고사진 파일명: ${uploadedFiles.map(f=>f.name).join(', ')}\n중요: 웹페이지에서 선택한 이미지 파일은 Codex로 자동 전송되지 않는다. 사용자가 해당 이미지 파일을 Codex 대화에 직접 첨부하거나 Codex 작업 폴더에 배치했는지 확인한 다음 실제 파일을 열어 사용한다. 이미지 파일을 찾지 못하면 참고사진을 분석했다고 주장하지 않는다.\n업로드된 참고사진이 있다면 해당 이미지를 우선 참고하여 제품 정체성을 파악하고, 제품만 정확히 분리(누끼)한 뒤 모션그래픽에 활용해줘. 참고사진의 제품 형태, 라벨, 로고, 문구 배열, 색상, 재질, 캡/분사기 구조를 최대한 보존해줘. 사진 배경은 필요시 제거하고, 결과물에는 깔끔한 제품 프리뷰/설명용 배경이나 그래픽 요소만 사용해줘. 제품이 불명확한 부분은 임의로 다른 브랜드나 다른 형태로 만들어내지 말고 보수적으로 유지해줘.`:'업로드된 참고사진 없음. 텍스트 정보만으로 제작하되, 제품 관련 정보가 부족하면 임의로 과도하게 창작하지 말고 보수적으로 시각화해줘.';
+  const productSection=productMode?`\n\n[제품 설명 / 제품 프리뷰 특화 지침]\n이 작업은 제품 설명 또는 제품 프리뷰 성격의 모션그래픽이야.${val('productName').trim()?` 제품명은 "${val('productName').trim()}"이다.`:''}\n제품이 중심 피사체가 되도록 구성하고, 한눈에 제품이 잘 보이는 히어로 컷, 라벨 클로즈업, 핵심 특징 타이포, 성분/특징/용도 요약, 깔끔한 빛 반사와 그림자를 활용해줘. 과장 광고처럼 과도하게 꾸미기보다 프리미엄하고 정돈된 제품 소개 톤으로 연출해줘.${val('productCutout')?' 제품 참고사진이 있으면 배경 제거(누끼) 후 제품 단독 오브젝트로 활용해줘.':''}${val('labelProtect')?' 라벨·로고·문구는 최대한 정확히 보존해줘.':''}${val('noInvent')?' 제품 정보가 애매하면 새로운 제품 디테일을 임의 생성하지 마.':''}`:'';
+  prompt=`KYUBUKI MOTION STUDIO의 AGENTS.md 및 기존 디자인 시스템을 적용하여 다음 대본을 실제 모션그래픽으로 제작해줘.\n\n[대본 / 자막]\n${val('script').trim()||'(대본을 입력하세요)'}\n\n[업로드 참고자료]\n${uploadedSummary}\n\n[사용자 입력 참고사항]\n제품명: ${val('productName').trim()||'미입력'}\n추가 참고사항: ${val('references').trim()||'없음'}\n\n[아트 디렉션]\n영상 목적: ${val('purpose')}\n연출 스타일: ${val('style')}\n질감: ${val('texture')}\n색감: ${val('color')}\n정보 밀도: ${val('density')}\n스티커 활용도: ${val('stickers')}/10 (문맥에 필요할 때만)\n애니메이션 역동성: ${val('motion')}/10\n창의성: ${val('creative')}/10\n화면 언어: ${val('lang')}\n\n[제작 및 출력]\n타이밍: ${timing}\n시안: ${val('variants')}\n해상도: ${size} / ${val('aspect')} / ${val('fps')}\n출력: ${val('output')} / Rec.709 SDR\n제작 모드: ${val('quality')}\n${productSection}\n\n[필수 지침]\n대본의 의미를 시각화하고 연출은 자율적으로 판단해줘. 과학 설명은 정교한 도식·측정선·벡터 형태 변화로, 유머와 경험담은 필요할 때만 빈티지 스티커·콜라주로 표현해줘. 기존 템플릿을 기계적으로 반복하지 말고, 라이선스가 확인된 자산 또는 자체 제작 그래픽만 사용해줘. 검증되지 않은 수치와 제품 정보를 임의로 만들지 마. 스토리보드, 실제 구현, 프리뷰 검수, 최종 렌더링 및 검증까지 진행해줘. 기존 결과물을 보존하고 생성 파일 위치와 미검증 항목을 알려줘.${durationRules}`;
+  $('preview').textContent=prompt;
+  try{localStorage.setItem('kyubuki-v23', JSON.stringify({
+    script:val('script'), productName:val('productName'), references:val('references'),
+    purpose:$('purpose').selectedIndex, style:$('style').selectedIndex, density:$('density').selectedIndex, texture:$('texture').selectedIndex, color:$('color').selectedIndex,
+    timing:$('timing').selectedIndex, variants:$('variants').selectedIndex, resolution:$('resolution').selectedIndex, fps:$('fps').selectedIndex, aspect:$('aspect').selectedIndex,
+    output:$('output').selectedIndex, quality:$('quality').selectedIndex, lang:$('lang').selectedIndex,
+    seconds:val('seconds'), stickers:val('stickers'), motion:val('motion'), creative:val('creative'),
+    productCutout:val('productCutout'), labelProtect:val('labelProtect'), noInvent:val('noInvent')
+  }));}catch{}
 }
-$("presets").addEventListener("click",e=>{const button=e.target.closest("button[data-p]");if(!button)return;const p=presets[button.dataset.p];Object.entries(p).forEach(([id,value])=>{if(defs[id])$(id).selectedIndex=value;else set(id,String(value))});update()});
-document.querySelectorAll("input,select,textarea").forEach(el=>{el.addEventListener("input",update);el.addEventListener("change",update)});
-$("reset").onclick=()=>{if(!confirm("설정과 대본을 모두 기본값으로 초기화할까요?"))return;for(const [id,v]of Object.entries(defaultFields))set(id,v);update();$("status").textContent="설정이 초기화되었습니다."};
-$("clear-script").onclick=()=>{set("script","");update();$("script").focus()};
-$("copy").onclick=async()=>{
- if(!get("script").trim()){$("status").textContent="대본이나 내용을 입력하세요.";return}
- try{await navigator.clipboard.writeText(prompt);$("status").textContent="복사 완료. Codex에 붙여 넣으세요."}
- catch(e){const a=document.createElement("textarea");a.value=prompt;document.body.appendChild(a);a.select();const ok=document.execCommand("copy");a.remove();$("status").textContent=ok?"복사 완료.":"복사가 제한되었습니다. 오른쪽 명령어를 직접 복사하세요."}
-};
-$("save").onclick=()=>{
- const blob=new Blob([prompt],{type:"text/plain;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="KYUBUKI_Codex_Prompt_V2.2.txt";a.click();setTimeout(()=>URL.revokeObjectURL(u),2000);$("status").textContent="TXT 다운로드를 요청했습니다.";
-};
-restore();update();
-})();
-</script></body></html>
+$('reset').onclick=()=>{for(const [id,,def] of defs){$(id).selectedIndex=def;} $('script').value='아무리 좋은 제품이라도 작업성이 떨어지면 결국 손이 가지 않습니다.'; $('productName').value=''; $('references').value=''; $('seconds').value=10; $('stickers').value=2; $('motion').value=6; $('creative').value=8; $('productCutout').checked=true; $('labelProtect').checked=true; $('noInvent').checked=true; uploadedFiles=[]; $('refImages').value=''; $('thumbs').innerHTML=''; $('uploadSummary').textContent='업로드된 참고사진 없음'; setPreset('auto'); $('status').textContent='기본값으로 초기화했습니다.'; update();};
+$('copy').onclick=async()=>{if(!val('script').trim()){$('status').textContent='먼저 대본을 입력하세요.';return}try{await navigator.clipboard.writeText(prompt);$('status').textContent='복사 완료! Codex에 붙여 넣으세요.'}catch{const t=document.createElement('textarea');t.value=prompt;document.body.append(t);t.select();let ok=false;try{ok=document.execCommand('copy')}catch{}t.remove();$('status').textContent=ok?'복사 완료!':'자동 복사가 차단되었습니다. 오른쪽 명령어를 직접 선택하여 복사하세요.'}};
+$('save').onclick=()=>{const u=URL.createObjectURL(new Blob([prompt],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download='KYUBUKI_Codex_Prompt_V2.3.txt';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$('status').textContent='TXT 저장을 요청했습니다.'};
+for(const el of document.querySelectorAll('textarea,input,select')) el.addEventListener('input',update);
+try{const saved=JSON.parse(localStorage.getItem('kyubuki-v23')||'null'); if(saved){ if(saved.script!=null) $('script').value=saved.script; if(saved.productName!=null) $('productName').value=saved.productName; if(saved.references!=null) $('references').value=saved.references; ['purpose','style','density','texture','color','timing','variants','resolution','fps','aspect','output','quality','lang'].forEach(id=>{if(saved[id]!=null) $(id).selectedIndex=saved[id];}); ['seconds','stickers','motion','creative'].forEach(id=>{if(saved[id]!=null) $(id).value=saved[id];}); ['productCutout','labelProtect','noInvent'].forEach(id=>{if(saved[id]!=null) $(id).checked=saved[id];}); }}catch{}
+update();
+</script>
+</body>
+</html>
