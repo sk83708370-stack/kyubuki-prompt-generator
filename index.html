@@ -7,6 +7,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>KYUBUKI — Prompt Generator V2.4</title>
+<link rel="icon" href="data:,">
 <style>
 :root{color-scheme:dark;--bg:#101113;--panel:#181a1d;--line:#343942;--muted:#a5aab3;--ink:#f2efe8;--red:#b74038;--blue:#8ec0d2;--soft:#121417;--chip:#272b31}
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 system-ui,'Malgun Gothic',sans-serif}
@@ -238,6 +239,8 @@ footer{margin-top:18px;color:var(--muted);font-size:12px}
 </main>
 <script>
 
+const $=id=>document.getElementById(id);
+
 const previewStyles={
 "AI 자율 판단":["auto","AI 자율","내용과 이미지에 맞춰 세련된 그래픽을 자동 조합합니다.","01 / CREATIVE MOTION","깔끔한 제품 중심 모션"],
 "과학·기술 인포그래픽":["science","과학 다큐","차가운 블루 그리드·측정선·기술 도식을 강조합니다.","01 / TECHNICAL ANALYSIS","정밀한 수치와 과학적 구성"],
@@ -254,7 +257,12 @@ function updateVisualPreview(){
  const settings=previewStyles[val('style')]||previewStyles["AI 자율 판단"];
  const stage=$('stage');
  stage.className='stage style-'+settings[0]+(val('aspect')==='9:16'?' ratio-portrait':'');
- $('styleLabel').textContent=settings[1];$('styleDescription').textContent=settings[2];$('stageEyebrow').textContent=settings[3];$('stageSub').textContent=settings[4];
+ const settingsSummary=['purpose','density','texture','color']
+   .filter(id=>$(id).selectedIndex>0)
+   .map(id=>val(id));
+ $('styleLabel').textContent=settings[1];
+ $('styleDescription').textContent=[settings[2],...settingsSummary].join(' · ');
+ $('stageEyebrow').textContent=settings[3];$('stageSub').textContent=settings[4];
  const name=val('productName').trim();const script=val('script').trim();
  const first=(name||script.split(/[.!?。\n]/)[0]||'제품 소개').trim();
  $('stageTitle').textContent=first.length>36?first.slice(0,35)+'…':first;
@@ -287,7 +295,6 @@ const defs=[
 ['quality',['고품질','빠른 제작','최고 완성도'],0],
 ['lang',['한국어','영어','한국어·영어 병기'],0]
 ];
-const $=id=>document.getElementById(id);
 for(const [id,opts,def] of defs){const el=$(id); opts.forEach((v,i)=>{const o=document.createElement('option');o.textContent=v; if(i===def)o.selected=true; el.append(o);});}
 let prompt=''; let uploadedFiles=[];
 const presetMap={
@@ -340,7 +347,9 @@ $('reset').onclick=()=>{for(const [id,,def] of defs){$(id).selectedIndex=def;} $
 $('copy').onclick=async()=>{if(!val('script').trim()){$('status').textContent='먼저 대본을 입력하세요.';return}try{await navigator.clipboard.writeText(prompt);$('status').textContent='복사 완료! Codex에 붙여 넣으세요.'}catch{const t=document.createElement('textarea');t.value=prompt;document.body.append(t);t.select();let ok=false;try{ok=document.execCommand('copy')}catch{}t.remove();$('status').textContent=ok?'복사 완료!':'자동 복사가 차단되었습니다. 오른쪽 명령어를 직접 선택하여 복사하세요.'}};
 $('save').onclick=()=>{const u=URL.createObjectURL(new Blob([prompt],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download='KYUBUKI_Codex_Prompt_V2.4.txt';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);$('status').textContent='TXT 저장을 요청했습니다.'};
 for(const el of document.querySelectorAll('textarea,input,select')) el.addEventListener('input',update);
-try{const saved=JSON.parse(localStorage.getItem('kyubuki-v23')||'null'); if(saved){ if(saved.script!=null) $('script').value=saved.script; if(saved.productName!=null) $('productName').value=saved.productName; if(saved.references!=null) $('references').value=saved.references; ['purpose','style','density','texture','color','timing','variants','resolution','fps','aspect','output','quality','lang'].forEach(id=>{if(saved[id]!=null) $(id).selectedIndex=saved[id];}); ['seconds','stickers','motion','creative'].forEach(id=>{if(saved[id]!=null) $(id).value=saved[id];}); ['productCutout','labelProtect','noInvent'].forEach(id=>{if(saved[id]!=null) $(id).checked=saved[id];}); }}catch{}
+try{const saved=JSON.parse(localStorage.getItem('kyubuki-v23')||'null'); if(saved){ if(saved.script!=null) $('script').value=saved.script; if(saved.productName!=null) $('productName').value=saved.productName; if(saved.references!=null) $('references').value=saved.references;
+ for(const [id,opts,def] of defs){const index=saved[id]; $(id).selectedIndex=Number.isInteger(index)&&index>=0&&index<opts.length?index:def;}
+ ['seconds','stickers','motion','creative'].forEach(id=>{if(saved[id]!=null) $(id).value=saved[id];}); ['productCutout','labelProtect','noInvent'].forEach(id=>{if(saved[id]!=null) $(id).checked=saved[id];}); }}catch{}
 update();
 </script>
 </body>
